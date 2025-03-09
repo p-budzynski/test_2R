@@ -1,0 +1,16 @@
+Napisz serwis springowy ktory pozwala wczytywac figury geometryczne z pliku, plik wyglada np: tak:
+Dany jest plik figury.txt który wygląda mniej wiecej tak:
+
+KWADRAT;10
+KWADRAT;20
+PROSTOKAT;10;30
+KOLO;10
+KOLO;20
+PROSTOKAT;40;50
+KWADRAT;60
+
+figury maja byc zapisane w bazie danych jako encje, kazda z figur ma miec swoja unikalna tabele.
+nastepnie, stworz metode serwisową ktora w sposob efektywny wyszuka z bazy figure z najwiekszym polem.
+
+
+calosc pokryj testami jednostkowymi i/lub integracyjnymi, co uznasz ze ma wieksza wartosc.
