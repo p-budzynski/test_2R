@@ -11,7 +11,6 @@ import pl.kurs.entity.Figure;
 import pl.kurs.entity.Rectangle;
 import pl.kurs.entity.Square;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,13 +28,13 @@ public class FigureMapper {
 
     private Figure toEntity(FigureDto dto) {
         switch (dto.getName().toUpperCase()) {
-            case "KOLO":
+            case "CIRCLE":
                 CircleDto circleDto = (CircleDto) dto;
                 return new Circle(circleDto.getRadius());
-            case "KWADRAT":
+            case "SQUARE":
                 SquareDto squareDto = (SquareDto) dto;
                 return new Square(squareDto.getSide());
-            case "PROSTOKAT":
+            case "RECTANGLE":
                 RectangleDto rectangleDto = (RectangleDto) dto;
                 return new Rectangle(rectangleDto.getWidth(), rectangleDto.getHeight());
         }
@@ -43,36 +42,19 @@ public class FigureMapper {
         return null;
     }
 
-    public List<FigureDto> toDto(List<Object[]> databaseResults) {
-        List<FigureDto> figureDtoList = new ArrayList<>();
-
-        for (Object[] row : databaseResults) {
-            if (row == null || row.length < 2) {
-                continue;
-            }
-
-            String type = (String) row[0];
-
-            switch (type.toUpperCase()) {
-                case "KOLO":
-                    if (row[1] != null && row[1] instanceof Double && (Double) row[1] > 0) {
-                        figureDtoList.add(new CircleDto((Double) row[1]));
-                    }
-                    break;
-                case "KWADRAT":
-                    if (row[1] != null && row[1] instanceof Double && (Double) row[1] > 0) {
-                        figureDtoList.add(new SquareDto((Double) row[1]));
-                    }
-                    break;
-                case "PROSTOKAT":
-                    if (row[1] != null && row[1] instanceof Double && (Double) row[1] > 0 &&
-                            row[2] != null && row[2] instanceof Double && (Double) row[2] > 0) {
-                        figureDtoList.add(new RectangleDto((Double) row[1], (Double) row[2]));
-                    }
-                    break;
-            }
+    public FigureDto toDto(Figure figure) {
+        switch (figure.getName().toUpperCase()) {
+            case "CIRCLE":
+                Circle circle = (Circle) figure;
+                return new CircleDto(circle.getRadius());
+            case "SQUARE":
+                Square square = (Square) figure;
+                return new SquareDto(square.getSide());
+            case "RECTANGLE":
+                Rectangle rectangle = (Rectangle) figure;
+                return new RectangleDto(rectangle.getWidth(), rectangle.getHeight());
         }
-
-        return figureDtoList;
+        System.err.println("Unsupported figure type: " + figure.getName());
+        return null;
     }
 }

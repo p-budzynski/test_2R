@@ -9,7 +9,6 @@ import pl.kurs.dto.FigureDto;
 import pl.kurs.service.FigureService;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class FigureController {
     }
 
     @GetMapping(value = "/largest")
-    public ResponseEntity<List<FigureDto>> getLargestFigure() {
-        return ResponseEntity.ok(figureService.findFiguresWithLargestArea());
+    public ResponseEntity<FigureDto> getLargestFigure() {
+        return ResponseEntity.ok(figureService.findFigureWithLargestArea());
     }
 }

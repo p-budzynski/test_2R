@@ -1,4 +1,4 @@
-package pl.kurs.parrser;
+package pl.kurs.parser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,14 +49,14 @@ public class FigureParser {
         String type = parts[0].trim();
 
         switch (type.toUpperCase()) {
-            case "KWADRAT":
+            case "SQUARE":
                 double side = Double.parseDouble(parts[1]);
                 return new SquareDto(side);
-            case "PROSTOKAT":
+            case "RECTANGLE":
                 double width = Double.parseDouble(parts[1]);
                 double height = Double.parseDouble(parts[2]);
                 return new RectangleDto(width, height);
-            case "KOLO":
+            case "CIRCLE":
                 double radius = Double.parseDouble(parts[1]);
                 return new CircleDto(radius);
             default:

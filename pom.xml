@@ -77,6 +77,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -117,8 +122,11 @@
                         <exclude>pl/kurs/Application.class</exclude>
                     </excludes>
                 </configuration>
+
                 <executions>
+                    <!-- Konfiguracja dla testów jednostkowych -->
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -130,6 +138,27 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+
+                    <!-- Konfiguracja dla testów integracyjnych -->
+                    <execution>
+                        <id>prepare-agent-integration</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-integration</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco/jacoco-it.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/jacoco/integration</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Weryfikacja pokrycia kodu -->
                     <execution>
                         <id>default-verify</id>
                         <phase>verify</phase>
@@ -172,6 +201,38 @@
                             </rules>
                         </configuration>
                     </execution>
+
+                    <!-- Łączenie raportów z testów jednostkowych i integracyjnych -->
+                    <execution>
+                        <id>merge-results</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}/jacoco</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/jacoco/jacoco-merged.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>merged-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco/jacoco-merged.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/jacoco/merged</outputDirectory>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
         </plugins>

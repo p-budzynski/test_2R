@@ -1,13 +1,15 @@
 package pl.kurs.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "rectangle")
-@SequenceGenerator(name = "rectangle_seq", sequenceName = "rectangle_seq", allocationSize = 1)
+@Table(name = "rectangle") @NoArgsConstructor
+@Getter
 public class Rectangle extends Figure {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rectangle_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "width", nullable = false)
@@ -17,7 +19,7 @@ public class Rectangle extends Figure {
     private Double height;
 
     public Rectangle(Double width, Double height) {
-        super("PROSTOKAT");
+        super("RECTANGLE");
         this.width = width;
         this.height = height;
     }

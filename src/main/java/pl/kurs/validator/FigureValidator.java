@@ -18,14 +18,15 @@ public class FigureValidator {
             return false;
         }
 
+
         String type = parts[0].trim();
 
         switch (type) {
-            case "KWADRAT":
+            case "SQUARE":
                 return validateSquare(parts, lineNumber);
-            case "PROSTOKAT":
+            case "RECTANGLE":
                 return validateRectangle(parts, lineNumber);
-            case "KOLO":
+            case "CIRCLE":
                 return validateCircle(parts, lineNumber);
             default:
                 System.err.println("Line number: '" + lineNumber + "' has unknown figure type: '" + type +"'.");
@@ -33,7 +34,7 @@ public class FigureValidator {
         }
     }
 
-    private boolean validateCircle(String[] parts, int lineNumber) {
+    boolean validateCircle(String[] parts, int lineNumber) {
         if (parts.length != 2) {
             System.err.println("Line number: '" + lineNumber + "' has the wrong number of parameters for circle.");
             return false;
@@ -51,7 +52,7 @@ public class FigureValidator {
         return true;
     }
 
-    private boolean validateRectangle(String[] parts, int lineNumber) {
+    boolean validateRectangle(String[] parts, int lineNumber) {
         if (parts.length != 3) {
             System.err.println("Line number: '" + lineNumber + "' has the wrong number of parameters for rectangle.");
             return false;
@@ -67,7 +68,7 @@ public class FigureValidator {
             return false;
         }
         try {
-            double height = Double.parseDouble(parts[1]);
+            double height = Double.parseDouble(parts[2]);
             if (height <= 0) {
                 System.err.println("Line number: '" + lineNumber + "' - length of rectangle height must be positive.");
                 return false;
@@ -79,7 +80,7 @@ public class FigureValidator {
         return true;
     }
 
-    private boolean validateSquare(String[] parts, int lineNumber) {
+    boolean validateSquare(String[] parts, int lineNumber) {
         if (parts.length != 2) {
             System.err.println("Line number: '" + lineNumber + "' has the wrong number of parameters for square.");
             return false;

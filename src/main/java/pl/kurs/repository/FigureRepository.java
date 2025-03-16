@@ -1,11 +1,13 @@
 package pl.kurs.repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import pl.kurs.entity.Circle;
 import pl.kurs.entity.Figure;
+import pl.kurs.entity.Rectangle;
+import pl.kurs.entity.Square;
 
 import java.util.List;
 
@@ -21,29 +23,27 @@ public class FigureRepository {
         }
     }
 
-    public List<Object[]> findFiguresWithLargestArea() {
-        String sql = """
-                WITH figures AS (
-                SELECT name, radius::double precision AS param1, NULL::double precision AS param2, (PI() * radius * radius) AS area FROM circle
-                UNION ALL
-                SELECT name, side::double precision AS param1, NULL::double precision AS param2, (side * side) AS area FROM square
-                UNION ALL
-                SELECT name, width::double precision AS param1, height::double precision AS param2, (width * height) AS area FROM rectangle
-                ), max_area AS (
-                SELECT MAX(area) AS max_value FROM figures
-                )
-                SELECT f.name, f.param1, f.param2
-                FROM figures f, max_area m
-                WHERE f.area = m.max_value
-                ORDER BY f.name;
-                """;
-
-        Query query = entityManager.createNativeQuery(sql);
-
+    public Figure findFiguresWithLargestArea() {
         @SuppressWarnings("unchecked")
-        List<Object[]> result = query.getResultList();
+        List<Object[]> results = entityManager.createNativeQuery(
+                "SELECT typ, id FROM figure_max_area"
+        ).getResultList();
 
-        return result;
+        if (results.isEmpty()) {
+            System.err.println("No figures in database.");
+            return null;
+        }
+
+        Object[] result = results.get(0);
+        String typ = (String) result[0];
+        Long id = ((Number) result[1]).longValue();
+
+        return switch (typ.toLowerCase()) {
+            case "circle" -> entityManager.find(Circle.class, id);
+            case "square" -> entityManager.find(Square.class, id);
+            case "rectangle" -> entityManager.find(Rectangle.class, id);
+            default -> throw new IllegalStateException("Unknown figure type: " + typ);
+        };
     }
 
 }

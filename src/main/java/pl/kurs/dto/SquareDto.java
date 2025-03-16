@@ -9,7 +9,7 @@ public class SquareDto extends FigureDto {
     private double side;
 
     public SquareDto(double side) {
-        super("KWADRAT");
+        super("SQUARE");
         this.side = side;
     }
 }

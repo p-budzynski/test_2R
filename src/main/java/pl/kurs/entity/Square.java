@@ -1,20 +1,23 @@
 package pl.kurs.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "square")
-@SequenceGenerator(name = "square_seq", sequenceName = "square_seq", allocationSize = 1)
+@NoArgsConstructor
+@Getter
 public class Square extends Figure {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "square_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "side", nullable = false)
     private Double side;
 
     public Square(Double side) {
-        super("KWADRAT");
+        super("SQUARE");
         this.side = side;
     }
 }

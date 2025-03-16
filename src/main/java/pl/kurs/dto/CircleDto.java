@@ -8,7 +8,7 @@ public class CircleDto extends FigureDto {
     private double radius;
 
     public CircleDto(double radius) {
-        super("KOLO");
+        super("CIRCLE");
         this.radius = radius;
     }
 }

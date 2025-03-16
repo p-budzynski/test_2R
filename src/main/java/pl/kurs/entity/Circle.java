@@ -1,20 +1,23 @@
 package pl.kurs.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "circle")
-@SequenceGenerator(name = "circle_seq", sequenceName = "circle_seq", allocationSize = 1)
+@NoArgsConstructor
+@Getter
 public class Circle extends Figure {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "circle_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "radius", nullable = false)
     private Double radius;
 
     public Circle(Double radius) {
-        super("KOLO");
+        super("CIRCLE");
         this.radius = radius;
     }
 }

@@ -6,12 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.kurs.dto.FigureDto;
 import pl.kurs.entity.Figure;
 import pl.kurs.mapper.FigureMapper;
-import pl.kurs.parrser.FigureParser;
+import pl.kurs.parser.FigureParser;
 import pl.kurs.repository.FigureRepository;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +29,8 @@ public class FigureService {
         return figureList.size();
     }
 
-    public List<FigureDto> findFiguresWithLargestArea() {
-        List<Object[]> databaseResults = figureRepository.findFiguresWithLargestArea();
-        return figureMapper.toDto(databaseResults);
+    public FigureDto findFigureWithLargestArea() {
+        Figure databaseResult = figureRepository.findFiguresWithLargestArea();
+        return figureMapper.toDto(databaseResult);
     }
 }

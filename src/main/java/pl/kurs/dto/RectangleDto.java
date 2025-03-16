@@ -10,7 +10,7 @@ public class RectangleDto extends FigureDto {
     private double height;
 
     public RectangleDto(double width, double height) {
-        super("PROSTOKAT");
+        super("RECTANGLE");
         this.width = width;
         this.height = height;
     }
