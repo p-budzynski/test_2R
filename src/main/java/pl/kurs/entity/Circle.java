@@ -20,4 +20,9 @@ public class Circle extends Figure {
         super("CIRCLE");
         this.radius = radius;
     }
+
+    @Override
+    public String toString() {
+        return "id: +" + id + " - " + getName() + ", radius: " + radius;
+    }
 }

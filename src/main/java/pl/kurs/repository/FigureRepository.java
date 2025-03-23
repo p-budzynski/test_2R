@@ -26,7 +26,10 @@ public class FigureRepository {
     public Figure findFiguresWithLargestArea() {
         @SuppressWarnings("unchecked")
         List<Object[]> results = entityManager.createNativeQuery(
-                "SELECT typ, id FROM figure_max_area"
+                """
+                        SELECT typ, id FROM figure_max_area
+                        ORDER BY area DESC
+                        LIMIT 1;"""
         ).getResultList();
 
         if (results.isEmpty()) {

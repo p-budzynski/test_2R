@@ -20,4 +20,9 @@ public class Square extends Figure {
         super("SQUARE");
         this.side = side;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + " - " + getName() + ", side: " + side;
+    }
 }

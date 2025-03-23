@@ -18,7 +18,6 @@ public class FigureValidator {
             return false;
         }
 
-
         String type = parts[0].trim();
 
         switch (type) {

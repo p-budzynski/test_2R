@@ -1,0 +1,21 @@
+--liquibase formatted sql
+--changeset test_2r:1
+
+CREATE TABLE IF NOT EXISTS square (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    side DOUBLE PRECISION NOT NUll
+);
+
+CREATE TABLE IF NOT EXISTS rectangle (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    width DOUBLE PRECISION NOT NUll,
+    height DOUBLE PRECISION NOT NUll
+);
+
+CREATE TABLE IF NOT EXISTS circle (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    radius DOUBLE PRECISION NOT NUll
+);

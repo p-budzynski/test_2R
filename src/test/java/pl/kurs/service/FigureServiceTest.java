@@ -1,90 +1,78 @@
 package pl.kurs.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.multipart.MultipartFile;
-import pl.kurs.dto.CircleDto;
-import pl.kurs.dto.FigureDto;
-import pl.kurs.dto.RectangleDto;
-import pl.kurs.dto.SquareDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import pl.kurs.entity.Circle;
 import pl.kurs.entity.Figure;
 import pl.kurs.entity.Rectangle;
 import pl.kurs.entity.Square;
-import pl.kurs.mapper.FigureMapper;
 import pl.kurs.parser.FigureParser;
 import pl.kurs.repository.FigureRepository;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class FigureServiceTest {
+@SpringBootTest
+@ActiveProfiles("test")
+class FigureServiceTest {
 
-    @Mock
-    private FigureRepository figureRepositoryMock;
+    @Autowired
+    private EntityManager entityManager;
 
-    @Mock
-    private FigureMapper figureMapperMock;
-
-    @Mock
-    private FigureParser figureParserMock;
-
-    @InjectMocks
+    @Autowired
     private FigureService figureService;
 
+    @Autowired
+    private FigureRepository figureRepository;
+
+    @Autowired
+    private FigureParser figureParser;
+
     @Test
-    void shouldParseFileAndSaveFiguresForUploadFigures() throws IOException {
+    @Transactional
+    void shouldSaveFiguresFromFile() throws IOException {
         //given
-        MultipartFile file = mock(MultipartFile.class);
-        List<FigureDto> figureDtos = List.of(
-                new CircleDto(7),
-                new SquareDto( 4),
-                new RectangleDto(3, 5)
-        );
+        loadTestData();
 
-        List<Figure> figures = Arrays.asList(
-                new Circle(7.0),
-                new Square(4.0),
-                new Rectangle(3.0,5.0)
-        );
+        //when then
+        Circle circle = entityManager.find(Circle.class, 1L);
+        Square square = entityManager.find(Square.class, 1L);
+        Rectangle rectangle = entityManager.find(Rectangle.class, 1L);
 
-        when(figureParserMock.parseFiguresFromFile(file)).thenReturn(figureDtos);
-        when(figureMapperMock.toEntities(figureDtos)).thenReturn(figures);
+        assertThat(circle).isNotNull();
+        assertThat(circle.getRadius()).isEqualTo(5.0);
 
-        //when
-        Integer result = figureService.uploadFigures(file);
+        assertThat(square).isNotNull();
+        assertThat(square.getSide()).isEqualTo(4.0);
 
-        //then
-        assertThat(result).isEqualTo(3);
-        verify(figureParserMock).parseFiguresFromFile(file);
-        verify(figureMapperMock).toEntities(figureDtos);
-        verify(figureRepositoryMock).saveAll(figures);
+        assertThat(rectangle).isNotNull();
+        assertThat(rectangle.getWidth()).isEqualTo(3.0);
+        assertThat(rectangle.getHeight()).isEqualTo(6.0);
     }
 
     @Test
-    void shouldReturnFigureWithLargestAreaAsDto() {
+    void shouldFindFigureWithLargestArea() throws IOException {
         //given
-        Figure largestFigure = new Circle(5.0);
-        FigureDto largestFigureDto = new CircleDto(5);
-
-        when(figureRepositoryMock.findFiguresWithLargestArea()).thenReturn(largestFigure);
-        when(figureMapperMock.toDto(largestFigure)).thenReturn(largestFigureDto);
+        loadTestData();
 
         //when
-        FigureDto result = figureService.findFigureWithLargestArea();
+        Figure largestFigure = figureService.findFigureWithLargestArea();
 
         //then
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(largestFigureDto);
-        verify(figureRepositoryMock).findFiguresWithLargestArea();
-        verify(figureMapperMock).toDto(largestFigure);
+        assertThat(largestFigure).isNotNull();
+        assertThat(largestFigure).isInstanceOf(Circle.class);
+        Circle circle = (Circle) largestFigure;
+        assertThat(circle.getRadius()).isEqualTo(5.0);
+    }
+
+    private void loadTestData() throws IOException {
+        File file = new File("src/test/resources/test-figures.txt");
+        figureService.uploadFigures(file);
     }
 }

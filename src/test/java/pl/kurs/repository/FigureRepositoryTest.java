@@ -17,13 +17,9 @@ import pl.kurs.entity.Square;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,7 +69,10 @@ public class FigureRepositoryTest {
         List<Object[]> results = new ArrayList<>();
         results.add(new Object[]{"circle", 1L});
 
-        when(entityManagerMock.createNativeQuery("SELECT typ, id FROM figure_max_area"))
+        when(entityManagerMock.createNativeQuery("""
+                        SELECT typ, id FROM figure_max_area
+                        ORDER BY area DESC
+                        LIMIT 1;"""))
                 .thenReturn(queryMock);
         when(queryMock.getResultList()).thenReturn(results);
         when(entityManagerMock.find(Circle.class, 1L)).thenReturn(expectedCircle);
@@ -95,7 +94,10 @@ public class FigureRepositoryTest {
         List<Object[]> results = new ArrayList<>();
         results.add(new Object[]{"square", 2L});
 
-        when(entityManagerMock.createNativeQuery("SELECT typ, id FROM figure_max_area"))
+        when(entityManagerMock.createNativeQuery("""
+                        SELECT typ, id FROM figure_max_area
+                        ORDER BY area DESC
+                        LIMIT 1;"""))
                 .thenReturn(queryMock);
         when(queryMock.getResultList()).thenReturn(results);
         when(entityManagerMock.find(Square.class, 2L)).thenReturn(expectedSquare);
@@ -117,7 +119,10 @@ public class FigureRepositoryTest {
         List<Object[]> results = new ArrayList<>();
         results.add(new Object[]{"rectangle", 3L});
 
-        when(entityManagerMock.createNativeQuery("SELECT typ, id FROM figure_max_area")).thenReturn(queryMock);
+        when(entityManagerMock.createNativeQuery("""
+                        SELECT typ, id FROM figure_max_area
+                        ORDER BY area DESC
+                        LIMIT 1;""")).thenReturn(queryMock);
         when(queryMock.getResultList()).thenReturn(results);
         when(entityManagerMock.find(Rectangle.class, 3L)).thenReturn(expectedRectangle);
 
@@ -137,7 +142,10 @@ public class FigureRepositoryTest {
         List<Object[]> results = new ArrayList<>();
         results.add(new Object[]{"unknown", 4L});
 
-        when(entityManagerMock.createNativeQuery("SELECT typ, id FROM figure_max_area")).thenReturn(queryMock);
+        when(entityManagerMock.createNativeQuery("""
+                        SELECT typ, id FROM figure_max_area
+                        ORDER BY area DESC
+                        LIMIT 1;""")).thenReturn(queryMock);
         when(queryMock.getResultList()).thenReturn(results);
 
         //when then
@@ -149,7 +157,10 @@ public class FigureRepositoryTest {
     @Test
     void shouldReturnNullWhenNoFigures() {
         //given
-        when(entityManagerMock.createNativeQuery("SELECT typ, id FROM figure_max_area")).thenReturn(queryMock);
+        when(entityManagerMock.createNativeQuery("""
+                        SELECT typ, id FROM figure_max_area
+                        ORDER BY area DESC
+                        LIMIT 1;""")).thenReturn(queryMock);
         when(queryMock.getResultList()).thenReturn(Collections.emptyList());
 
         //when

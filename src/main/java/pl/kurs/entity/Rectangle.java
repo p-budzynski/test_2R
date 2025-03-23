@@ -24,4 +24,9 @@ public class Rectangle extends Figure {
         this.height = height;
     }
 
+    @Override
+    public String toString() {
+        return "id: +" + id + " - " + getName() + ", width: " + width + ", height: " + height;
+    }
+
 }
